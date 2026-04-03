@@ -1,16 +1,24 @@
 import express from "express";
+import * as fs from "fs";
 
 const app = express();
+const __dirname = import.meta.dirname;
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome" });
-});
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
-app.post("/", (req, res) => {
-  res.send("You can post to this endpoint");
+app.get("/api/v1/tours", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    results: tours.length,
+    data: {
+      tours: tours
+    },
+  });
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`App running on http://localhost:${PORT}`);
+const HOSTNAME = process.env.HOSTNAME || "localhost";
+
+app.listen(PORT, HOSTNAME, () => {
+  console.log(`App running on http://${HOSTNAME}:${PORT}`);
 });
