@@ -6,20 +6,15 @@ import {
   deleteTour,
   getAllTours,
   getSingleTour,
-  updateTourWithPatch
+  updateTourWithPatch,
 } from "../controllers/tourController.js";
 
 const router = express.Router();
 
 router.param("id", checkID);
 
-router.route("/")
-  .get(getAllTours)
-  .post(checkBody, createNewTour);
+router.route("/").get(getAllTours).post(checkBody, createNewTour);
 
-router.route("/:id")
-  .get(getSingleTour)
-  .patch(updateTourWithPatch)
-  .delete(deleteTour);
+router.route("/:id").get(getSingleTour).patch(updateTourWithPatch).delete(deleteTour);
 
 export default router;

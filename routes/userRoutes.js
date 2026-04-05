@@ -4,18 +4,13 @@ import {
   deleteUser,
   getAllUsers,
   getSingleUserByID,
-  updateUserWithPatch
+  updateUserWithPatch,
 } from "../controllers/userController.js";
 
 const router = express.Router();
 
-router.route("/")
-  .get(getAllUsers)
-  .post(createUser);
+router.route("/").get(getAllUsers).post(createUser);
 
-router.route("/:id")
-  .get(getSingleUserByID)
-  .patch(updateUserWithPatch)
-  .delete(deleteUser);
+router.route("/:id").get(getSingleUserByID).patch(updateUserWithPatch).delete(deleteUser);
 
 export default router;
