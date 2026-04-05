@@ -5,9 +5,14 @@ import userRouter from "./routes/userRoutes.js";
 
 const app = express();
 
-app.use(morgan("dev"));
+// const __dirname = import.meta.dirname;
 
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 app.use(express.json());
+// Serving public data from files
+// app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
   console.log("Hello from the middleware!");
