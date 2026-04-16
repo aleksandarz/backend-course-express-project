@@ -1,7 +1,6 @@
 import express from "express";
 import {
   checkBody,
-  checkID,
   createNewTour,
   deleteTour,
   getAllTours,
@@ -10,8 +9,6 @@ import {
 } from "../controllers/tourController.js";
 
 const router = express.Router();
-
-router.param("id", checkID);
 
 router.route("/").get(getAllTours).post(checkBody, createNewTour);
 
