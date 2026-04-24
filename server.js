@@ -2,13 +2,9 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import app from "./app.js";
 
-const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
+const DB = process.env.DATABASE.replace("<DATABASE_PASSWORD>", process.env.DATABASE_PASSWORD);
 
-const conn = await mongoose.connect(DB, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
+const conn = await mongoose.connect(DB);
 
 if (conn) {
   console.log("Connected successfully");
