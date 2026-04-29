@@ -1,4 +1,5 @@
 import Tour from "../models/tourModel.js";
+import APIFeatures from "../utils/apiFeatures.js";
 
 export const aliasTopTours = (req, res, next) => {
   req.query.limit = "5";
@@ -9,44 +10,50 @@ export const aliasTopTours = (req, res, next) => {
 
 export const getAllTours = async (req, res) => {
   try {
-    const queryObj = { ...req.query }
-    const excludedFields = ["page", "sort", "limit", "fields"];
-    excludedFields.forEach(el => delete queryObj[el]);
+    // const queryObj = { ...req.query }
+    // const excludedFields = ["page", "sort", "limit", "fields"];
+    // excludedFields.forEach(el => delete queryObj[el]);
+    //
+    // let queryStr = JSON.stringify(queryObj);
+    // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    //
+    // let query = Tour.find(JSON.parse(queryStr));
 
-    let queryStr = JSON.stringify(queryObj);
-    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    // if (req.query.sort) {
+    //   const sortBy = req.query.sort.split(',').join(" ");
+    //   console.log(sortBy);
+    //   query = query.sort(sortBy);
+    // } else {
+    //   query = query.sort("-createdAt");
+    // }
+    //
+    // if (req.query.fields) {
+    //   const fields = req.query.fields.split(',').join(" ");
+    //   console.log(fields);
+    //   query = query.select(fields);
+    // } else {
+    //   query = query.select("-__v");
+    // }
+    //
+    // const page = Number(req.query.page) || 1;
+    // const limit = Number(req.query.limit) || 100;
+    // const skip = (page - 1) * limit;
+    // query = query.skip(skip).limit(limit);
+    //
+    // if (req.query.page) {
+    //   const numTours = await Tour.countDocuments();
+    //   if (skip >= numTours) {
+    //     throw new Error("This page doesn't exist!");
+    //   }
+    // }
 
-    let query = Tour.find(JSON.parse(queryStr));
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .pagination();
 
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(" ");
-      console.log(sortBy);
-      query = query.sort(sortBy);
-    } else {
-      query = query.sort("-createdAt");
-    }
-
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(" ");
-      console.log(fields);
-      query = query.select(fields);
-    } else {
-      query = query.select("-__v");
-    }
-
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 100;
-    const skip = (page - 1) * limit;
-    query = query.skip(skip).limit(limit);
-
-    if (req.query.page) {
-      const numTours = await Tour.countDocuments();
-      if (skip >= numTours) {
-        throw new Error("This page doesn't exist!");
-      }
-    }
-
-    const tours = await query;
+    const tours = await features.query;
 
     res.status(200).json({
       status: "success",
