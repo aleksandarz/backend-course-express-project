@@ -83,7 +83,11 @@ tourSchema.pre(/^find/, async function () {
 
 tourSchema.post(/^find/, async function (docs) {
   console.log(`Query took ${Date.now() - this.start}ms`);
-  console.log(docs);
+});
+
+tourSchema.pre("aggregate", async function () {
+  this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });
+  console.log(this.pipeline());
 });
 
 const Tour = mongoose.model("Tour", tourSchema);
